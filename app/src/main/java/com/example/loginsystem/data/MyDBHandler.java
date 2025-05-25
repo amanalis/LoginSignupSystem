@@ -5,15 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import androidx.annotation.ContentView;
 import androidx.annotation.Nullable;
 
 import com.example.loginsystem.params.Params;
 
 public class MyDBHandler extends SQLiteOpenHelper {
 
+    public static final String databaseName = "Signup.db";
 
     public MyDBHandler(@Nullable Context context) {
         super(context, "Signup.db", null, Params.DB_VERSION);
@@ -21,7 +20,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create Table allusers(emai TEXT primary key, password TEXT)");
+        db.execSQL("create Table allusers(email TEXT primary key, password TEXT)");
 
 //        String create = "CREATE TABLE " + Params.TABLE_NAME +
 //                "(" + Params.KEY_ID + " INTEGER PRIMARY KEY,"

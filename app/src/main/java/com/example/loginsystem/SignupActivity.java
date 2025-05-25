@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.loginsystem.data.MyDBHandler;
+import com.example.loginsystem.databinding.ActivityLoginBinding;
 import com.example.loginsystem.databinding.ActivitySignupBinding;
 
 public class SignupActivity extends AppCompatActivity {
@@ -23,6 +24,8 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
 
