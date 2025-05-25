@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.LoginSystem" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/levendar</item>
+        <item name="colorPrimaryVariant">@color/levendar</item>
+
+    </style>
+
+    <style name="Theme.LoginSystem" parent="Base.Theme.LoginSystem" />
+</resources>
