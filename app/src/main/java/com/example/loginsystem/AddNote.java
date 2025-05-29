@@ -26,7 +26,7 @@ public class AddNote extends AppCompatActivity {
     EditText editContent;
     Button addNote;
     TextView shareEmail;
-    MyDBHandler dbHandler;
+//    MyDBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class AddNote extends AppCompatActivity {
 
         shareEmail.setText(email);
 
-
+        MyDBHandler myDBHandler = new MyDBHandler(AddNote.this); // ✅ initialize it
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +58,7 @@ public class AddNote extends AppCompatActivity {
                     return;
                 }
 
-                boolean success = dbHandler.insertNote(email, title, content, timestamp);
+                boolean success = myDBHandler.insertNote(email, title, content, timestamp);
 
                 if (success) {
                     Toast.makeText(AddNote.this, "Note added!", Toast.LENGTH_SHORT).show();

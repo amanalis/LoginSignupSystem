@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences getSharedPreferences = getSharedPreferences("demo",MODE_PRIVATE);
         String useremail = getSharedPreferences.getString("email","email");
 
+        notesArrayList = new ArrayList<>();
         allNotes = myDBHandler.getNotesByEmail(useremail);
         for(Notes notes : allNotes){
             notesArrayList.add(notes);
