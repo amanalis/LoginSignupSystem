@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     MyDBHandler myDBHandler;
     ListView listView;
     Button addBtn;
+    ArrayAdapter<String> arrayAdapter;
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -69,6 +70,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotes();
+    }
+
+    private void loadNotes(){
+        SharedPreferences getSharedPreferences = getSharedPreferences("demo",MODE_PRIVATE);
+        String email = getSharedPreferences.getString("email","email");
+
+        notesArrayList.clear();
+        allNotes = myDBHandler.getNotesByEmail(email);
+
+        for(Notes notes : allNotes){
+            notesArrayList.add(notes);
+        }
+        if (arrayAdapter == null) {
+            recyclerViewAdapter = new RecyclerViewAdapter(MainActivity.this, notesArrayList);
+            recyclerView.setAdapter(recyclerViewAdapter);
+        } else {
+            recyclerViewAdapter.notifyDataSetChanged();
+        }
 
     }
 }

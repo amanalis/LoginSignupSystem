@@ -116,17 +116,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return notesList;
     }
 
-    public int updateNote(Notes notes){
+    public Boolean updateNote(int id, String email, String title, String content, String timestamp){
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("title",notes.getTitle());
-        contentValues.put("content",notes.getContent());
-        contentValues.put("timestamp",notes.getTimestamp());
+        contentValues.put("title",title);
+        contentValues.put("content",content);
+        contentValues.put("timestamp",timestamp);
 
         //lets update now
-        return database.update("notes", contentValues,"id=?",
-                new String[]{String.valueOf(notes.getId())});
+        int result = database.update("notes", contentValues,"id=? AND email = ?",
+                new String[]{String.valueOf(id),email});
+        return result > 0;
     }
 
     public void deleteNote (Notes notes){

@@ -1,5 +1,6 @@
 package com.example.loginsystem;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -28,14 +29,18 @@ public class AddNote extends AppCompatActivity {
     TextView shareEmail;
 //    MyDBHandler dbHandler;
 
+    boolean isEditMode = false;
+    int noteId = -1;//default
+    String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_note);
 
-        SharedPreferences getSharedPreferences = getSharedPreferences("demo",MODE_PRIVATE);
-        String email = getSharedPreferences.getString("email","email");
+        SharedPreferences getSharedPreferences = getSharedPreferences("demo", MODE_PRIVATE);
+        email = getSharedPreferences.getString("email", "default@gmail.com");
 
         editTitle = findViewById(R.id.addTitle);
         editContent = findViewById(R.id.addContent);
@@ -45,6 +50,21 @@ public class AddNote extends AppCompatActivity {
         shareEmail.setText(email);
 
         MyDBHandler myDBHandler = new MyDBHandler(AddNote.this); // ✅ initialize it
+
+        //chaeck if Note is Opened
+        Intent intent = getIntent();
+        if (intent.hasExtra("id")) {
+            isEditMode = true;
+            noteId=intent.getIntExtra("id",-1);
+            String title = intent.getStringExtra("title");
+            String content = intent.getStringExtra("content");
+
+            editTitle.setText(title);
+            editContent.setText(content);
+            addNote.setText("Update Note");
+        }
+
+
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,14 +78,16 @@ public class AddNote extends AppCompatActivity {
                     return;
                 }
 
-                boolean success = myDBHandler.insertNote(email, title, content, timestamp);
+                boolean success;
 
-                if (success) {
-                    Toast.makeText(AddNote.this, "Note added!", Toast.LENGTH_SHORT).show();
-                    finish(); // Close this activity
+                if (isEditMode) {
+                    success = myDBHandler.updateNote(noteId,email,title,content,timestamp);
+                    Toast.makeText(AddNote.this, success? "Note added!":"Failed to update", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(AddNote.this, "Failed to add note", Toast.LENGTH_SHORT).show();
+                    success =  myDBHandler.insertNote(email,title,content,timestamp);
+                    Toast.makeText(AddNote.this, success ? "Note added!" : "Failed to add note", Toast.LENGTH_SHORT).show();
                 }
+                if(success) finish(); // Close this activity
             }
         });
     }

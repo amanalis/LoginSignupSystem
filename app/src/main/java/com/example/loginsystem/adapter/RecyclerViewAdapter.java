@@ -1,6 +1,7 @@
 package com.example.loginsystem.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.loginsystem.AddNote;
 import com.example.loginsystem.R;
 import com.example.loginsystem.data.MyDBHandler;
 import com.example.loginsystem.model.Notes;
@@ -32,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
         return new ViewHolder(view);
     }
 
@@ -44,6 +46,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.notesContent.setText(notes.getContent());
         holder.notesTimeStamp.setText(notes.getTimestamp());
 
+        holder.notesOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = holder.getAdapterPosition();
+                Notes notes1 = notesList.get(position);
+
+                Intent intent = new Intent(context, AddNote.class);
+                intent.putExtra("email", notes1.getEmail());
+                intent.putExtra("title",notes1.getTitle());
+                intent.putExtra("content",notes1.getContent());
+                intent.putExtra("timeStamp",notes1.getTimestamp());
+                intent.putExtra("id",notes1.getId());
+                context.startActivity(intent);
+            }
+        });
+        holder.notesDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = holder.getAdapterPosition();
+                Notes notes1 = notesList.get(position);
+
+                dbHandler.deleteNote(notes1);
+                notesList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, notesList.size());
+
+                Toast.makeText(context, "Deleted: " + notes1.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -51,7 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return notesList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView notesTitle;
         public TextView notesContent;
         public TextView notesTimeStamp;
