@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +29,27 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         myDBHandler = new MyDBHandler(this);
+        EditText emailField = binding.loginEmail;
+        EditText passwordField = binding.loginPassword;
+        CheckBox remember = findViewById(R.id.rememberMe);
+        SharedPreferences sharedPreferences = getSharedPreferences("demo", MODE_PRIVATE);
+        boolean isRemembered = sharedPreferences.getBoolean("rememberMe", false);
+
+        if (isRemembered){
+            String savedEmail = sharedPreferences.getString("email","");
+            String savedPassword = sharedPreferences.getString("password","");
+
+            emailField.setText(savedEmail);
+            passwordField.setText(savedPassword);
+            remember.setChecked(true);
+
+            if(myDBHandler.checkEmailPassword(savedEmail,savedPassword)){
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        }
 
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +67,13 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
 
                         editor.putString("email",email);
+                        if(remember.isChecked()){
+                            editor.putString("password",password);
+                            editor.putBoolean("rememberMe",true);
+                        }else{
+                            editor.remove("password");
+                            editor.putBoolean("rememberMe",false);
+                        }
                         editor.apply();
 
                         binding.loginEmail.setText("");

@@ -48,6 +48,13 @@
                     android:inputType="textPassword"
                     android:padding="8dp" />
 
+                <CheckBox
+                    android:id="@+id/rememberMe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remeber Me"
+                    android:textColor="@color/levendar" />
+
                 <Button
                     android:id="@+id/login_button"
                     android:layout_width="match_parent"

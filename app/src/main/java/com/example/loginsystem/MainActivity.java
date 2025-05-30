@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences sharedPreferences = getSharedPreferences("demo",MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.clear();
+                        editor.putBoolean("rememberMe",false);
                         editor.apply();
 
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
