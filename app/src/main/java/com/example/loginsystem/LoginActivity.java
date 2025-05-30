@@ -1,5 +1,6 @@
 package com.example.loginsystem;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.loginsystem.data.MyDBHandler;
@@ -44,10 +46,12 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("email",email);
                         editor.apply();
 
+                        binding.loginEmail.setText("");
+                        binding.loginPassword.setText("");
+
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
-                        email = "";
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
                     }
@@ -61,5 +65,21 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Exit App")
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false) // prevents back press from closing the dialog
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishAffinity(); // or finish() if you just want to close current activity
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+
+        // ❌ Do NOT call super.onBackPressed() here
     }
 }
