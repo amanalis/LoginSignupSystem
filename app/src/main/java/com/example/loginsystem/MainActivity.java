@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         replaceFragment(new HomeFragement());
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_home){
+                    replaceFragment(new HomeFragement());
+                }else if(id == R.id.nav_logout){
+                    showLogoutDialog();
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -112,6 +129,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+       showLogoutDialog();
+    }
+
+    private void showLogoutDialog(){
         new AlertDialog.Builder(this)
                 .setTitle("Log Out")
                 .setMessage("Are you sure you want to log out?")
