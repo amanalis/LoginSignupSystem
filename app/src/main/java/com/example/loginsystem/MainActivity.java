@@ -13,32 +13,36 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.loginsystem.adapter.RecyclerViewAdapter;
 import com.example.loginsystem.data.MyDBHandler;
 import com.example.loginsystem.model.Notes;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    MyDBHandler myDBHandler;
-    ListView listView;
-    Button addBtn;
-    ArrayAdapter<String> arrayAdapter;
+    DrawerLayout drawerLayout;
 
-    private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
-    private ArrayList<Notes> notesArrayList;
-    List<Notes> allNotes;
+//    private RecyclerView recyclerView;
+//    private RecyclerViewAdapter recyclerViewAdapter;
+//    private ArrayList<Notes> notesArrayList;
+//    List<Notes> allNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.listView);
+        /*recyclerView = findViewById(R.id.listView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -72,33 +76,38 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, AddNote.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        if (savedInstanceState == null){
+            getSupportFragmentManager().
+                    beginTransaction().
+                    replace(R.id.frame_layout, new HomeFragement()).commit();
+            navigationView.setCheckedItem(R.id.nav_home);
+        }
+
+        replaceFragment(new HomeFragement());
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadNotes();
-    }
-
-    private void loadNotes(){
-        SharedPreferences getSharedPreferences = getSharedPreferences("demo",MODE_PRIVATE);
-        String email = getSharedPreferences.getString("email","email");
-
-        notesArrayList.clear();
-        allNotes = myDBHandler.getNotesByEmail(email);
-
-        for(Notes notes : allNotes){
-            notesArrayList.add(notes);
-        }
-        if (arrayAdapter == null) {
-            recyclerViewAdapter = new RecyclerViewAdapter(MainActivity.this, notesArrayList);
-            recyclerView.setAdapter(recyclerViewAdapter);
-        } else {
-            recyclerViewAdapter.notifyDataSetChanged();
-        }
-
+//        loadNotes();
     }
 
     @Override
