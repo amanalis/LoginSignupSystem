@@ -40,6 +40,22 @@
         app:itemTextColor="@color/levendar"
         app:menu="@menu/nav_menu"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fab1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="40dp"
+            android:backgroundTint="@color/levendar"
+            app:tint="@color/white"
+            android:src="@drawable/baseline_person_24"/>
+    </RelativeLayout>
+
 </androidx.drawerlayout.widget.DrawerLayout>
 
 
